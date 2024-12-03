@@ -69,11 +69,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Cliente` (
   `idCliente` INT NOT NULL AUTO_INCREMENT,
-  `Email` VARCHAR(45) NOT NULL,
+  `Email` VARCHAR(100) NOT NULL,
   `DataNasc` DATETIME NOT NULL,
   `Senha` VARCHAR(45) NOT NULL,
   `Nome` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`idCliente`))
+  PRIMARY KEY (`idCliente`),
+  UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE)
 ENGINE = InnoDB;
 
 
