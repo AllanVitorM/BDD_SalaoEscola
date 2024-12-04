@@ -69,12 +69,39 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Cliente` (
   `idCliente` INT NOT NULL AUTO_INCREMENT,
-  `Email` VARCHAR(100) NOT NULL,
+  `Email` VARCHAR(150) NOT NULL,
   `DataNasc` DATETIME NOT NULL,
   `Senha` VARCHAR(45) NOT NULL,
   `Nome` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`idCliente`),
   UNIQUE INDEX `Email_UNIQUE` (`Email` ASC) VISIBLE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `SalaoEscola_PI`.`Venda`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Venda` (
+  `idVenda` INT NOT NULL AUTO_INCREMENT,
+  `data` DATETIME NOT NULL,
+  `valor` DECIMAL(6,2) ZEROFILL NOT NULL,
+  `Desconto` DECIMAL(6,2) NULL,
+  `Funcionario_idFuncionario` INT UNSIGNED NOT NULL,
+  `Cliente_idCliente` INT NOT NULL,
+  PRIMARY KEY (`idVenda`),
+  UNIQUE INDEX `idVenda_UNIQUE` (`idVenda` ASC) VISIBLE,
+  INDEX `fk_Venda_Funcionario1_idx` (`Funcionario_idFuncionario` ASC) VISIBLE,
+  INDEX `fk_Venda_Cliente1_idx` (`Cliente_idCliente` ASC) VISIBLE,
+  CONSTRAINT `fk_Venda_Funcionario1`
+    FOREIGN KEY (`Funcionario_idFuncionario`)
+    REFERENCES `SalaoEscola_PI`.`Funcionario` (`idFuncionario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_Venda_Cliente1`
+    FOREIGN KEY (`Cliente_idCliente`)
+    REFERENCES `SalaoEscola_PI`.`Cliente` (`idCliente`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
@@ -108,7 +135,7 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Atendimento` (
   `idAtendimento` INT NOT NULL AUTO_INCREMENT,
-  `TempoGasto` VARCHAR(45) NOT NULL,
+  `TempoGasto` TIME NOT NULL,
   `Agendamento_idAgendamento` INT NOT NULL,
   PRIMARY KEY (`idAtendimento`),
   INDEX `fk_Atendimento_Agendamento1_idx` (`Agendamento_idAgendamento` ASC) VISIBLE,
@@ -134,40 +161,6 @@ CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Servico` (
   CONSTRAINT `fk_Servico_Atendimento1`
     FOREIGN KEY (`Atendimento_idAtendimento`)
     REFERENCES `SalaoEscola_PI`.`Atendimento` (`idAtendimento`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
--- Table `SalaoEscola_PI`.`Venda`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Venda` (
-  `idVenda` INT NOT NULL AUTO_INCREMENT,
-  `data` DATETIME NOT NULL,
-  `valor` DECIMAL(6,2) ZEROFILL NOT NULL,
-  `Desconto` DECIMAL(6,2) NULL,
-  `Funcionario_idFuncionario` INT UNSIGNED NOT NULL,
-  `Cliente_idCliente` INT NOT NULL,
-  `Servico_idServico` INT NOT NULL,
-  PRIMARY KEY (`idVenda`),
-  UNIQUE INDEX `idVenda_UNIQUE` (`idVenda` ASC) VISIBLE,
-  INDEX `fk_Venda_Funcionario1_idx` (`Funcionario_idFuncionario` ASC) VISIBLE,
-  INDEX `fk_Venda_Cliente1_idx` (`Cliente_idCliente` ASC) VISIBLE,
-  INDEX `fk_Venda_Servico1_idx` (`Servico_idServico` ASC) VISIBLE,
-  CONSTRAINT `fk_Venda_Funcionario1`
-    FOREIGN KEY (`Funcionario_idFuncionario`)
-    REFERENCES `SalaoEscola_PI`.`Funcionario` (`idFuncionario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Venda_Cliente1`
-    FOREIGN KEY (`Cliente_idCliente`)
-    REFERENCES `SalaoEscola_PI`.`Cliente` (`idCliente`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_Venda_Servico1`
-    FOREIGN KEY (`Servico_idServico`)
-    REFERENCES `SalaoEscola_PI`.`Servico` (`idServico`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -273,7 +266,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`ProdUtilizados` (
   `Produtos_idProdutos` INT NOT NULL,
   `Atendimento_idAtendimento` INT NOT NULL,
-  `Quantidade` VARCHAR(45) NULL,
+  `Quantidade` INT NULL,
   PRIMARY KEY (`Produtos_idProdutos`, `Atendimento_idAtendimento`),
   INDEX `fk_ProdUtilizados_Atendimento1_idx` (`Atendimento_idAtendimento` ASC) VISIBLE,
   CONSTRAINT `fk_ProdUtilizados_Produtos1`
@@ -312,6 +305,37 @@ CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Endereco` (
     FOREIGN KEY (`Cliente_idCliente`)
     REFERENCES `SalaoEscola_PI`.`Cliente` (`idCliente`)
     ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `SalaoEscola_PI`.`ItensVendaServico`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`ItensVendaServico` (
+  `Servico_idServico` INT NOT NULL,
+  `Venda_idVenda` INT NOT NULL,
+  `Funcionario_idFuncionario` INT UNSIGNED NOT NULL,
+  `qnt` INT NULL,
+  `Desconto` DECIMAL(5,2) NULL,
+  `ValorVenda` DECIMAL(6,2) NULL,
+  PRIMARY KEY (`Servico_idServico`, `Venda_idVenda`, `Funcionario_idFuncionario`),
+  INDEX `fk_table1_Venda1_idx` (`Venda_idVenda` ASC) VISIBLE,
+  INDEX `fk_table1_Funcionario1_idx` (`Funcionario_idFuncionario` ASC) VISIBLE,
+  CONSTRAINT `fk_table1_Servico1`
+    FOREIGN KEY (`Servico_idServico`)
+    REFERENCES `SalaoEscola_PI`.`Servico` (`idServico`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_table1_Venda1`
+    FOREIGN KEY (`Venda_idVenda`)
+    REFERENCES `SalaoEscola_PI`.`Venda` (`idVenda`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_table1_Funcionario1`
+    FOREIGN KEY (`Funcionario_idFuncionario`)
+    REFERENCES `SalaoEscola_PI`.`Funcionario` (`idFuncionario`)
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
