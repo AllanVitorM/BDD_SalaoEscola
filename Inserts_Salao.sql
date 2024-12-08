@@ -56,16 +56,16 @@ INSERT INTO `SalaoEscola_PI`.`Funcionario` (`Nome`, `DataNasc`, `Cargo`, `Salari
 ('Clara Mendes', '1997-08-08 00:00:00', 'Consultora', 2300.00, '20h', 10);
 
 INSERT INTO `SalaoEscola_PI`.`Cliente` (`Email`, `DataNasc`, `Senha`, `Nome`, `Endereco_idEndereco`) VALUES
-('joao.cliente@example.com', '1990-05-10 00:00:00', '12345', 'João Cliente', 1),
-('maria.cliente@example.com', '1992-07-15 00:00:00', 'senha1', 'Maria Cliente', 2),
-('pedro.cliente@example.com', '1987-03-22 00:00:00', 'senha2', 'Pedro Cliente', 3),
-('ana.cliente@example.com', '1995-11-05 00:00:00', 'senha3', 'Ana Cliente', 4),
-('carlos.cliente@example.com', '1988-09-30 00:00:00', 'senha4', 'Carlos Cliente', 5),
-('julia.cliente@example.com', '1992-02-12 00:00:00', 'senha5', 'Julia Cliente', 6),
-('roberto.cliente@example.com', '1978-06-01 00:00:00', 'senha6', 'Roberto Cliente', 7),
-('mariana.cliente@example.com', '1993-04-18 00:00:00', 'senha7', 'Mariana Cliente', 8),
-('fernando.cliente@example.com', '1986-10-25 00:00:00', 'senha8', 'Fernando Cliente', 9),
-('clara.cliente@example.com', '1997-08-08 00:00:00', 'senha9', 'Clara Cliente', 10);
+('joao.dograu@gmail.com', '1990-05-10 00:00:00', '12345', 'João Lopes', 1),
+('fernanda.torres@outlook.com', '1992-07-15 00:00:00', 'senha1', 'Fernanda Torres', 2),
+('Jose.clt@example.com', '1987-03-22 00:00:00', 'senha2', 'José Almeida', 3),
+('Vanessa.daMata@gmail.com', '1995-11-05 00:00:00', 'senha3', 'Vanessa da Mata', 4),
+('Gilberto.gil@hotmail.com', '1988-09-30 00:00:00', 'senha4', 'Gilberto Gil', 5),
+('Ivete.sangalo@hotmail.com', '1992-02-12 00:00:00', 'senha5', 'Ivete Sangalo', 6),
+('roberto.carlos@gmail.com', '1978-06-01 00:00:00', 'senha6', 'Roberto Carlos', 7),
+('anamaria.maisvc@gmail.com', '1993-04-18 00:00:00', 'senha7', 'Ana Maria Braga', 8),
+('Wesley.safadao@yahoo.com', '1986-10-25 00:00:00', 'senha8', 'Wesley Oliveira', 9),
+('clara.nunes@hotmail.com', '1997-08-08 00:00:00', 'senha9', 'Clara Nunes', 10);
 
 INSERT INTO `SalaoEscola_PI`.`Venda` (`dataVenda`, `valor`, `Desconto`, `Funcionario_idFuncionario`, `Cliente_idCliente`) VALUES
 ('2024-01-01 10:00:00', 100.00, 10.00, 1, 1),
@@ -221,7 +221,3 @@ INSERT INTO `SalaoEscola_PI`.`SrvAgendamento` (`Servico_idServico`, `Agendamento
 (8, 8, 8, 8, 2),
 (9, 9, 9, 9, 1),
 (10, 10, 10, 10, 2);
-
-
-
-
