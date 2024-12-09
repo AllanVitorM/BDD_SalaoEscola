@@ -1,4 +1,6 @@
 -- 1 - Liste os nomes dos clientes junto com os endereços completos em que eles residem
+-- 1 - view_clientes_enderecos
+create view view_clientes_enderecos as
 select cli.idCliente "ID Cliente", cli.email "E-mail", cli.datanasc "Data de Nascimento", cli.nome "Cliente", ende.rua "Rua", ende.bairro "Bairro",
 ende.cidade "Cidade", ende.UF "UF"
 	from cliente cli
@@ -12,6 +14,8 @@ select func.idFuncionario "ID do Funcionário", func.nome "Funcionário", func.c
 			order by func.nome;
         
 -- 3 - Exiba as vendas realizadas, incluindo os nomes dos clientes e funcionários responsáveis.
+-- 2 - view_venda_cliente_funcionario
+create view view_venda_cliente_funcionario as
 select vnd.idVenda "Id de Venda", cli.nome "Cliente", func.nome "Funcionário", func.cargo "Cargo", concat("R$ ", format(vnd.valor, 2, 'de_DE')) "Valor da Venda", 
 concat("R$ ", format(vnd.desconto, 2, 'de_DE')) "Desconto", concat("R$ ", format(sum(vnd.valor - vnd.desconto), 2, 'de_DE')) "Total Valor Vendido"
 	from venda vnd
@@ -21,6 +25,8 @@ concat("R$ ", format(vnd.desconto, 2, 'de_DE')) "Desconto", concat("R$ ", format
 				order by sum(vnd.valor - vnd.desconto) desc;
                 
 -- 4 - Liste os serviços agendados, mostrando o status do agendamento e o nome do cliente.
+-- 3 - view_status_agendamento_cliente
+create view view_status_agendamento_cliente as
 select agd.idAgendamento "Id de Agendamento", agd.Status "Satus do Agendamento",
 DATE_FORMAT(agd.dataagenda, '%d/%m/%Y %H:%i') "Data do Agendamento",
 cli.nome "Cliente", func.nome "Funcionário"
@@ -34,6 +40,8 @@ select date_format(fb.dataFB, '%H:%i - %d/%m/%Y') "Data do Feedback", fb.Descric
 		inner join cliente cli on cli.idcliente = fb.Cliente_idCliente;
 
 -- 6 - Liste os produtos utilizados em cada atendimento, mostrando o tempo gasto e o funcionário envolvido.
+-- 4 - view_produtil_atend
+create view view_produtil_atend as
 select prod.nome "Produto", atd.tempoGasto "Tempo Gasto", func.nome "Funcionário",
 DATE_FORMAT(agd.dataagenda, '%d/%m/%Y %H:%i') "Data do Atendimento"
 FROM produtilizados produ
@@ -52,6 +60,8 @@ date_format(vnd.dataVenda, '%H:%i - %d/%m/%Y') "Data da Venda"
 			order by sum(vnd.valor - vnd.desconto);
 
 -- 8 - Exiba os agendamentos confirmados com a data, o cliente e o funcionário relacionados.
+-- 5 - view_agd_confirmados
+create view view_agd_confirmados as
 select agd.idAgendamento "ID do Agendamento", date_format(agd.DataAgenda , '%H:%i - %d/%m/%Y') "Data do Agendamento", cli.nome "Cliente", func.nome "Funcionário",
 agd.Status "Status do Agendamento"
 	from agendamento agd
@@ -67,6 +77,8 @@ select lbt.Manutencao "Manutenção", cli.nome "Cliente", func.nome "Funcionári
 			order by lbt.Manutencao;
 
 -- 10 - Mostre as vendas, incluindo o método de pagamento utilizado e o total após desconto.
+-- 6 - view_vnd_metodopagamento
+create view view_vnd_metodopagamento as
 select pgt.MetodoPagamento "Forma de Pagamento", concat("R$ ", format(vnd.valor, 2, 'de_DE')) "Valor da Venda", 
 concat("R$ ", format(vnd.desconto, 2, 'de_DE')) "Desconto", 
 concat("R$ ", format(sum(vnd.valor - vnd.desconto), 2, 'de_DE')) "Total Valor Vendido"
@@ -79,6 +91,8 @@ concat("R$ ", format(sum(vnd.valor - vnd.desconto), 2, 'de_DE')) "Total Valor Ve
 				order by sum(vnd.valor - vnd.desconto) desc;
 
 -- 11 - Exiba os clientes que fizeram compras de produtos, incluindo os detalhes do produto comprado.
+-- 7 - view_cliente_compra_produtos
+create view view_cliente_compra_produtos as
 select cli.nome "Cliente", prod.nome "Produto", ivp.qtd "Quantidade",
 concat("R$ ", format(vnd.valor, 2, 'de_DE')) "Valor da Venda", 
 concat("R$ ", format(vnd.desconto, 2, 'de_DE')) "Desconto", 
@@ -125,6 +139,8 @@ select func.nome "Funcionário", time_format(atd.TempoGasto, '%H:%i') "Tempo Gas
         inner join funcionario func on func.idFuncionario = agd.Funcionario_idFuncionario;
 
 -- 16 - Mostre os produtos mais utilizados em atendimentos, com os funcionários responsáveis.
+-- 8 - view_prod_mais_usado_atendimento
+create view view_prod_mais_usado_atendimento as
 select atd.idAtendimento "Id do Atenditmento", func.Nome "Funcionário", prod.nome "Produto", COUNT(produ.Produtos_idProdutos) "Quantidade"
 	from produtilizados produ
 		inner join produtos prod on prod.idProdutos = produ.Produtos_idProdutos
@@ -134,6 +150,8 @@ select atd.idAtendimento "Id do Atenditmento", func.Nome "Funcionário", prod.no
 			group by atd.idAtendimento, prod.nome, func.Nome;
 
 -- 17 - Exiba os clientes que possuem agendamentos pendentes, incluindo o tipo de serviço agendado.
+-- 9 - view_agend_pendente_cliente
+create view view_agend_pendente_cliente as
 select agd.idAgendamento "ID do Agendamento", date_format(agd.DataAgenda , '%H:%i - %d/%m/%Y') "Data do Agendamento", cli.nome "Cliente", func.nome "Funcionário",
 agd.Status "Status do Agendamento"
 	from agendamento agd
@@ -142,6 +160,8 @@ agd.Status "Status do Agendamento"
 			where agd.status like "%Pendente%";
             
 -- 18 - Liste as vendas que incluíram tanto produtos quanto serviços, detalhando os itens vendidos.
+-- 10 - view_venda_prod_mais_serv 
+create view view_venda_prod_mais_serv as
 SELECT 
     vnd.idVenda "ID de Venda",
     date_format(vnd.DataVenda , '%H:%i - %d/%m/%Y') "Data de Venda",
