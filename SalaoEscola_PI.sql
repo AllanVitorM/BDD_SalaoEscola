@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Venda` (
   CONSTRAINT `fk_Venda_Cliente1`
     FOREIGN KEY (`Cliente_idCliente`)
     REFERENCES `SalaoEscola_PI`.`Cliente` (`idCliente`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`ItensVendaProd` (
   CONSTRAINT `fk_ItensVendaProd_Venda1`
     FOREIGN KEY (`Venda_idVenda`)
     REFERENCES `SalaoEscola_PI`.`Venda` (`idVenda`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_ItensVendaProd_Pagamento1`
     FOREIGN KEY (`Pagamento_idPagamento`)
@@ -185,7 +185,7 @@ CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Agendamento` (
   CONSTRAINT `fk_Agendamento_Cliente1`
     FOREIGN KEY (`Cliente_idCliente`)
     REFERENCES `SalaoEscola_PI`.`Cliente` (`idCliente`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -229,7 +229,7 @@ CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Atendimento` (
   CONSTRAINT `fk_Atendimento_Agendamento1`
     FOREIGN KEY (`Agendamento_idAgendamento`)
     REFERENCES `SalaoEscola_PI`.`Agendamento` (`idAgendamento`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -247,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Feedback` (
   CONSTRAINT `fk_Feedback_Cliente1`
     FOREIGN KEY (`Cliente_idCliente`)
     REFERENCES `SalaoEscola_PI`.`Cliente` (`idCliente`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -269,7 +269,7 @@ CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`ProdUtilizados` (
   CONSTRAINT `fk_ProdUtilizados_Atendimento1`
     FOREIGN KEY (`Atendimento_idAtendimento`)
     REFERENCES `SalaoEscola_PI`.`Atendimento` (`idAtendimento`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
@@ -297,7 +297,7 @@ CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`ItensVendaServico` (
   CONSTRAINT `fk_table1_Venda1`
     FOREIGN KEY (`Venda_idVenda`)
     REFERENCES `SalaoEscola_PI`.`Venda` (`idVenda`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_table1_Funcionario1`
     FOREIGN KEY (`Funcionario_idFuncionario`)
@@ -332,7 +332,7 @@ CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`SrvAgendamento` (
   CONSTRAINT `fk_Servico_has_Agendamento_Agendamento1`
     FOREIGN KEY (`Agendamento_idAgendamento` , `Agendamento_Funcionario_idFuncionario` , `Agendamento_Cliente_idCliente`)
     REFERENCES `SalaoEscola_PI`.`Agendamento` (`idAgendamento` , `Funcionario_idFuncionario` , `Cliente_idCliente`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
