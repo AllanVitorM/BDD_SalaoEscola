@@ -56,7 +56,7 @@ CREATE TABLE IF NOT EXISTS `SalaoEscola_PI`.`Cliente` (
   `idCliente` INT NOT NULL AUTO_INCREMENT,
   `Email` VARCHAR(150) NOT NULL,
   `DataNasc` DATETIME NOT NULL,
-  `Senha` VARCHAR(45) NOT NULL,
+  `Senha` VARCHAR(225) NOT NULL,
   `Nome` VARCHAR(45) NOT NULL,
   `Endereco_idEndereco` INT NULL,
   PRIMARY KEY (`idCliente`),
