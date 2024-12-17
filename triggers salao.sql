@@ -1,4 +1,4 @@
--- 6 TRIGGERS
+
 -- 1 - Verificar_Conflito_Agendamento (FUNCIONA)
 DELIMITER //
 CREATE TRIGGER Verificar_Conflito_Agendamento
@@ -17,59 +17,21 @@ END;
 //
 DELIMITER ;
 
--- 2 - Verificar_Estoque_Produtos (FUNCIONA)
-DELIMITER // 
-CREATE TRIGGER Verificar_Estoque_Produtos 
-BEFORE INSERT ON ItensVendaProd
+-- 2 - Atualizar_Senha (FUNCIONA)
+DELIMITER //
+CREATE TRIGGER AtualizarSenhaCliente 
+BEFORE INSERT ON Cliente
 FOR EACH ROW
 BEGIN
-    DECLARE qtdAtual INT;
-    SELECT quantidade INTO qtdAtual FROM Produtos WHERE idProdutos = NEW.Produtos_idProdutos;
-    IF qtdAtual < NEW.qtd THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Estoque insuficiente para o produto.';
+    IF RIGHT(NEW.Senha, 8) != '_upsenha' THEN
+        SET NEW.Senha = CONCAT(NEW.Senha, '_mobral');
     END IF;
 END;
 //
 DELIMITER ;
 
--- 3 - Atualizar_Saldo_Cliente (FUNCIONA)
-DELIMITER //
-CREATE TRIGGER Atualizar_Saldo_Cliente 
-AFTER INSERT ON Venda
-FOR EACH ROW
-BEGIN
-    UPDATE Cliente
-    SET Senha = CONCAT(Senha, '_upd') 
-    WHERE idCliente = NEW.Cliente_idCliente;
-END;
-//
-DELIMITER ;
 
--- 4 - Atualizar_Receita_Financeiro (FUNCIONA)
-DELIMITER //
-CREATE TRIGGER Atualizar_Receita_Financeiro
-AFTER INSERT ON Venda
-FOR EACH ROW
-BEGIN
-    UPDATE Financeiro
-    SET receita_total = receita_total + NEW.valor;
-END;
-//
-DELIMITER ;
-
--- 5 - Registrar_Historico_Agendamentos (FUNCIONA)
-DELIMITER //
-CREATE TRIGGER Registrar_Historico_Agendamentos
-AFTER DELETE ON Agendamento
-FOR EACH ROW
-BEGIN
-    INSERT INTO HistoricoAgendamentos (idAgendamento, dataAgenda, Cliente_idCliente, Funcionario_idFuncionario, motivoCancelamento)
-    VALUES (OLD.idAgendamento, OLD.dataAgenda, OLD.Cliente_idCliente, OLD.Funcionario_idFuncionario, 'Cancelado pelo sistema.');
-END;
-//
-DELIMITER ;
-
--- 6 -  Atualizar_Estoque_Produtos (FUNCIONA)
+-- 3 Atualizar_Estoque_Produtos (FUNCIONA)
 DELIMITER //
 CREATE TRIGGER Atualizar_Estoque_Produtos 
 AFTER INSERT ON ItensVendaProd
@@ -82,6 +44,30 @@ END;
 //
 DELIMITER ;
 
+-- 4 ATT STATUS AGENDAMENTO
+DELIMITER //
+CREATE TRIGGER Atualizar_Status_Agendamento
+BEFORE INSERT ON Agendamento
+FOR EACH ROW
+BEGIN
+    IF NEW.dataAgenda > CURDATE() THEN
+        SET NEW.status = 'Pendente';
+    END IF;
+END;
+//
+DELIMITER ;
 
-
+-- 5 NOTIFICAR ALTERAÇÃO PREÇO SERVIÇO
+DELIMITER //
+CREATE TRIGGER Notificar_Alteracao_Preco_Servico
+AFTER UPDATE ON Servico
+FOR EACH ROW
+BEGIN
+    IF OLD.Valor != NEW.Valor THEN
+        INSERT INTO Lembrete (Retorno, Manutencao, Funcionario_idFuncionario, Cliente_idCliente)
+        VALUES (CONCAT('Valor alterado "', OLD.nome, '" Valor Alterado ', NEW.Valor), CURDATE(), 3, 6);
+    END IF;
+END;
+//
+DELIMITER ;
 
